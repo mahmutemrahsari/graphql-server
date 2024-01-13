@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js",
+    "start": "npm run compile && node ./dist/src/index.js",
     "migrate:make": "NODE_OPTIONS='--loader ts-node/esm' knex migrate:make -x ts --knexfile knexfile.cjs",
     "migrate:run": "NODE_OPTIONS='--loader ts-node/esm' knex migrate:latest --knexfile knexfile.cjs",
     "seed:run": "NODE_OPTIONS='--loader ts-node/esm' knex seed:run --knexfile knexfile.cjs"
