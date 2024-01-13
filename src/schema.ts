@@ -1,41 +1,41 @@
 export const typeDefs = `#graphql
   
   type Task {
-    id: ID!
-    title: String!
-    completed: Boolean!
-    user_id:ID!
+    id:Int!
+    title:String!
+    completed:Boolean!
+    user_id:Int!
   }
 
   type User {
-    id:ID!
+    id:Int!
     name:String!
     tasks:[Task!]
   }
 
   type Query {
     greeting:String
-    tasks: [Task!]!
-    task(id:ID!):Task
+    tasks:[Task!]!
+    task(id:Int!):Task
     users:[User!]!
-    user(id:ID!):User
+    user(id:Int!):User
   }  
 
   type Mutation {
     addTask(task:AddTaskInput!):Task
-    deleteTask(id: ID!): [Task]
-    updateTask(id:ID!, edits:EditTaskInput! ):Task
+    deleteTask(id:Int!):[Task]
+    updateTask(id:Int!, edits:EditTaskInput!):Task
   }
 
   input AddTaskInput{
-    id: ID!
-    title: String!
-    completed: Boolean!
-    user_id:ID!
+    id:Int!
+    title:String!
+    completed:Boolean!
+    user_id:Int!
   }
   input EditTaskInput{
-    title: String
-    completed: Boolean
-    user_id:ID
+    title:String
+    completed:Boolean
+    user_id:Int
   }
 `;
