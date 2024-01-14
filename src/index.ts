@@ -5,11 +5,36 @@ import { db } from "../db/db.config.js";
 
 const resolvers = {
   Query: {
-    greeting: () => {
-      return "HELLO HELL!";
+    greeting: async () => {
+      // Add this before other database operations to log the connection details
+      db.raw("SELECT 1")
+        .then(() => {
+          console.log("Connected to the database!");
+        })
+        .catch((error) => {
+          console.error("Error connecting to the database:", error);
+        });
+      db.raw("SELECT * FROM tasks")
+        .then((result) => {
+          // Log or process the query result
+          console.log(result);
+        })
+        .catch((error) => {
+          // Handle any errors during the query execution
+          console.error("Error executing raw query:", error);
+        });
+      console.log(db.from("tasks").select().first());
+      return await db.from("tasks").select();
     },
-    tasks() {
-      return db("tasks");
+
+    tasks: async () => {
+      try {
+        const tasks = await db("tasks").select();
+        return tasks;
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+        throw new Error("Failed to fetch tasks");
+      }
     },
     task(_: any, args: { id: number }) {
       return db("tasks").where({ id: args.id }).first();
@@ -50,4 +75,4 @@ const { url } = await startStandaloneServer(server, {
   listen: { port: 4000 },
 });
 
-console.log(`🚀  Server ready at: ${url + "graphql"}`);
+console.log(`🚀  Server ready at: ${url}`);
