@@ -6,25 +6,7 @@ import { db } from "../db/db.config.js";
 const resolvers = {
   Query: {
     greeting: async () => {
-      // Add this before other database operations to log the connection details
-      db.raw("SELECT 1")
-        .then(() => {
-          console.log("Connected to the database!");
-        })
-        .catch((error) => {
-          console.error("Error connecting to the database:", error);
-        });
-      db.raw("SELECT * FROM tasks")
-        .then((result) => {
-          // Log or process the query result
-          console.log(result);
-        })
-        .catch((error) => {
-          // Handle any errors during the query execution
-          console.error("Error executing raw query:", error);
-        });
-      console.log(db.from("tasks").select().first());
-      return await db.from("tasks").select();
+      "Hello !";
     },
 
     tasks: async () => {
@@ -69,6 +51,10 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+});
+
+db.on("error", (error) => {
+  console.error("Could not connect to the database", error);
 });
 
 const { url } = await startStandaloneServer(server, {
