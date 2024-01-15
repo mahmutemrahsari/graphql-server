@@ -18,39 +18,86 @@ const resolvers = {
         throw new Error("Failed to fetch tasks");
       }
     },
-    task(_: any, args: { id: number }) {
-      return db("tasks").where({ id: args.id }).first();
+    task: async (_: unknown, args: { id: number }) => {
+      try {
+        return db("tasks").where({ id: args.id }).first();
+      } catch (error) {
+        console.error("Error fetching task:", error);
+        throw new Error("Failed to fetch task with id" + args.id);
+      }
     },
-    users() {
-      return db("users");
+    users: async () => {
+      try {
+        return db("users");
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        throw new Error("Failed to fetch users");
+      }
     },
-    user(_: any, args: { id: number }) {
-      return db("users").where({ id: args.id }).first();
+    user: async (_: unknown, args: { id: number }) => {
+      try {
+        return db("users").where({ id: args.id }).first();
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        throw new Error("Failed to fetch user with id:" + args.id);
+      }
     },
   },
   User: {
     async tasks(parent: { id: number }) {
-      return db("tasks").where({ user_id: parent.id }).select();
+      try {
+        return db("tasks").where({ user_id: parent.id }).select();
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        throw new Error("Failed to fetch tasks to the user! ");
+      }
     },
   },
   Mutation: {
-    async deleteTask(_: any, args: { id: number }) {
-      await db("tasks").where("id", args.id).del();
+    async deleteTask(_: unknown, args: { id: number }) {
+      try {
+        await db("tasks").where("id", args.id).del();
+      } catch (error) {
+        console.error("Error deleting task:", error);
+        throw new Error("Failed to delete task");
+      }
     },
-    async addTask(_: any, args: { task: any }) {
-      const [taskId] = await db("tasks").insert(args.task);
-      return db("tasks").where("id", taskId).first(); // Return the inserted task
+
+    async deleteAllTasks() {
+      try {
+        await db("tasks").del();
+        return "All tasks deleted successfully";
+      } catch (error) {
+        console.error("Error deleting tasks:", error);
+        throw new Error("Failed to delete tasks");
+      }
     },
-    async updateTask(_: any, args: { id: number; edits: any }) {
-      await db("tasks").where("id", args.id).update(args.edits);
-      return db("tasks").where("id", args.id).first(); // Return the updated task
+
+    async addTask(_: unknown, args: { task: unknown }) {
+      try {
+        return db("tasks")
+          .where("id", await db("tasks").insert(args.task))
+          .first(); // Return the inserted task
+      } catch (error) {
+        console.error("Error adding task:", error);
+        throw new Error("Failed to add task");
+      }
+    },
+    async updateTask(_: unknown, args: { id: number; edits: unknown }) {
+      try {
+        await db("tasks").where("id", args.id).update(args.edits);
+        return db("tasks").where("id", args.id).first(); // Return the updated task
+      } catch (error) {
+        console.error("Error updating task:", error);
+        throw new Error("Failed to update task");
+      }
     },
   },
 };
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  typeDefs, //apollo server conf
+  resolvers, //apollo server conf
 });
 
 db.on("error", (error) => {

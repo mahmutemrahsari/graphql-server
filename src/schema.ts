@@ -24,6 +24,7 @@ export const typeDefs = `#graphql
   type Mutation {
     addTask(task:AddTaskInput!):Task
     deleteTask(id:Int!):[Task]
+    deleteAllTasks: String
     updateTask(id:Int!, edits:EditTaskInput!):Task
   }
 
