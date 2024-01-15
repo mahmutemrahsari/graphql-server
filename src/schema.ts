@@ -26,6 +26,7 @@ export const typeDefs = `#graphql
     deleteTask(id:Int!):[Task]
     deleteAllTasks: String
     updateTask(id:Int!, edits:EditTaskInput!):Task
+    updatesometasaks([completed:{completed:true}]):[Task]
   }
 
   input AddTaskInput{
@@ -38,5 +39,10 @@ export const typeDefs = `#graphql
     title:String
     completed:Boolean
     user_id:Int
+  }
+
+  input SendInCompletedTask{
+    id:Int!
+    completed:Boolean
   }
 `;
